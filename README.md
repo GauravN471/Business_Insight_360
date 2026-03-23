@@ -1,164 +1,130 @@
-# Business Insight 360 — Power BI Analytics Suite
+# 📊 Business Insight 360 — Enterprise Analytics Suite | Power BI
 
-**Author:** Gaurav Nikam  
-**Contact / Portfolio:** [LinkedIn]((https://www.linkedin.com/in/-471-gaurav-nikam)) | Email: gauravnikam471@gmail.com.in
+![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
+![DAX](https://img.shields.io/badge/DAX-Advanced-blue?style=for-the-badge)
+![SQL](https://img.shields.io/badge/SQL-MySQL-orange?style=for-the-badge&logo=mysql&logoColor=white)
+![Excel](https://img.shields.io/badge/Excel-Power_Query-green?style=for-the-badge&logo=microsoft-excel&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=for-the-badge)
 
-**Live demo:**  
-👉 [Open the interactive report in Power BI Service](https://app.powerbi.com/view?r=eyJrIjoiZDBjNjc0YjctZGZmMy00MDE3LTkzNWQtNDVhOGJkNmEyMDg3IiwidCI6ImM2ZTU0OWIzLTVmNDUtNDAzMi1hYWU5LWQ0MjQ0ZGM1YjJjNCJ9)
+> **"360° visibility across Finance, Sales, Marketing, Supply Chain & Executive operations — replacing fragmented spreadsheet reporting with a single source of truth."**
 
----
-
-## Project summary
-
-**Business Insight 360** is a full-scale, enterprise-grade Power BI solution designed to give leadership a consolidated view of performance across **Finance, Sales, Marketing, Supply Chain,** and **Executive** operations.  
-It demonstrates end-to-end BI development: data ingestion and cleansing, star-schema modelling, advanced DAX, parameterization, and a polished UX with bookmarks, tooltips and a custom JSON theme.
-
-
+🔗 **[▶ View Live Interactive Dashboard](https://app.powerbi.com/view?r=eyJrIjoiZDBjNjc0YjctZGZmMy00MDE3LTkzNWQtNDVhOGJkNmEyMDg3IiwidCI6ImM2ZTU0OWIzLTVmNDUtNDAzMi1hYWU5LWQ0MjQ0ZGM1YjJjNCJ9)**
 
 ---
 
-## Table of contents
+## 🎯 Executive Summary
 
-- [Why this project](#why-this-project)  
-- [What you’ll find in this repo](#what-youll-find-in-this-repo)  
-- [Detailed page-by-page walkthrough](#detailed-page-by-page-walkthrough)  
-- [Data model & architecture](#data-model--architecture)    
-- [What I learned — skills & outcomes](#what-i-learned---skills--outcomes)  
-
+AtliQ Hardwares lacked a unified reporting layer across its business functions — leadership was making decisions from disconnected Excel reports with no cross-functional visibility. I designed and built an end-to-end enterprise Power BI solution covering 5 business domains on a 1.8M+ row star-schema data model, enabling leadership to benchmark performance against prior year and targets in real time.
 
 ---
 
-## Why this project
+## 🛠 Tech Stack
 
-- Demonstrates building a complete **enterprise reporting product**, not just a single dashboard.  
-- Uses real-world reporting patterns: star schema, utility tables, parameterized views, and performance-aware DAX.  
-- UX-first design: navigation tiles, a left-side filters panel, pop-up support panel, tooltip pages, and a custom theme.  
-- Practical for interviews — shows modeling, DAX proficiency, and product thinking.
-
----
-
-## What you’ll find in this repo
-
-- `README.md` — this file (you’re reading it).    
-- `gifs/` — animated previews of pages (small web-friendly GIFs).   
-- `dashboard.pbix` *(optional: see Hosting & File Size)*
+| Layer | Tools Used |
+|---|---|
+| **Data Modelling** | Star Schema — 3 fact tables, 4 dimension tables |
+| **ETL & Transformation** | Power Query (M Language) |
+| **Analytics & Measures** | DAX — CTEs, dynamic benchmarks, YoY variance, conditional formatting measures |
+| **Visualization** | Power BI Desktop + Power BI Service (published report) |
+| **Data Sources** | MySQL + Excel flat files |
+| **UX** | Custom JSON theme, bookmark navigation, tooltip pages, slide-in filter panel |
 
 ---
 
-## Detailed page-by-page walkthrough
+## 🧹 Data Cleaning & Transformation
 
-> Below each page I list the business purpose, key visuals, and what I implemented technically.
+**1. Multi-source consolidation via Power Query**
+Raw data arrived from two systems — MySQL transactional tables and Excel cost files. I merged fact tables (sales + manufacturing costs + deduction estimates) using M Language, resolving key mismatches and removing absolute file path dependencies so the model is portable.
 
-### Home (Landing)
-**Purpose:** Launchpad — quick navigation to each functional area.  
-**Key visuals & elements:** Logo, last refresh timestamp, 6 navigation tiles (Finance, Sales, Marketing, Supply Chain, Executive, Help).  
-**Implementation notes:** Built using bookmarks & button actions. Clean layout for quick demos.
+**2. Fiscal calendar engineering**
+AtliQ operates on a non-standard fiscal year (Sept–Aug). I built a custom `dim_date` table in Power Query, deriving fiscal month numbers, fiscal year labels, and quarter mappings — ensuring all time intelligence DAX functions produce correct period-over-period comparisons.
 
-[Home Page](https://github.com/GauravN471/Business_Insight_360/blob/main/Home-ezgif..gif)
----
+**3. P&L row structure via utility table**
+A standard star schema cannot natively represent a dynamic P&L (Gross Sales → Deductions → Net Sales → COGS → Gross Margin → Expenses → Net Profit). I solved this by creating a `P&L rows` utility table, allowing row-level P&L logic to be driven by DAX filters rather than hardcoded columns.
 
-### Finance View
-**Purpose:** Full P&L analysis and financial KPIs for decision makers.  
-**Key visuals:**  
-- KPI cards: Net Sales, Gross Margin %, Net Profit %, Forecast Accuracy %.  
-- Net Sales trend area + contribution chart.  
-- Full P&L table (Gross Sales → Net Profit) with drillable rows.  
-- Top/Bottom Products & Customers matrix.  
-**Technical highlights:**  
-- P&L rows modelled as utility table.  
-- Benchmarks (LY vs Target) controlled via parameter `Set BM`.  
-- Conditional formatting via DAX measures (color bars & arrows).
-
-[Finance Page](https://github.com/GauravN471/Business_Insight_360/blob/main/FinanceView-ezgif.gif)
+**4. Benchmark parameterization**
+Instead of duplicating measures for "vs Last Year" and "vs Target," I built a `Set BM` field parameter that dynamically switches the benchmark across all pages — halving the measure count and eliminating inconsistency across views.
 
 ---
 
-### Sales View
-**Purpose:** Customer & Product performance and contribution analysis.  
-**Key visuals:** Bubble/scatter for NS vs GM%, contribution donut, product/customer matrices.  
-**Technical highlights:** Dynamic sorting, measure-driven labels, field parameter to switch dimension.
+## 💡 Business Insights — The "So What?"
 
-[Sales Page](https://github.com/GauravN471/Business_Insight_360/blob/main/SalesView-ezgif.gif)
----
+- **Identified that Net Profit margin fell below 0% in key markets** despite strong Gross Margin figures, signalling that operating expense ratios were eroding profitability — enabling leadership to prioritize cost-structure reviews in high-revenue, low-NP markets.
 
-### Marketing View
-**Purpose:** Segment and category performance; marketing contribution.  
-**Key visuals:** Bubble charts, market-share visuals, segment tables.  
-**Technical highlights:** Field parameters for axis switching; segment-level conditional rules.
+- **Revealed a forecast accuracy gap exceeding threshold in specific product segments**, which directly mapped to stockout and excess inventory events — providing the Supply Chain team with a data-backed case to revise safety stock policies for high-variance SKUs.
 
-[Marketing Page](https://github.com/GauravN471/Business_Insight_360/blob/main/Marketingview-.gif)
----
-
-### Supply Chain View
-**Purpose:** Forecast accuracy and operational error analysis.  
-**Key visuals:** Combo chart (Net Error bars + Forecast Accuracy line), error trend, product/customer accuracy list.  
-**Technical highlights:** Forecast accuracy measures (`ABS Error`, `Forecast Accuracy %`, `Forecast Accuracy Variance`), and conditional thresholds for flags.
-
-[Supply Chain Page](https://github.com/GauravN471/Business_Insight_360/blob/main/Supplychainview-ezgif..gif)
----
-
-### Executive View
-**Purpose:** One-page summary for executives with drill-down ability.  
-**Key visuals:** High level KPIs, trend sparkline, top customers & products, region summary.  
-**Technical highlights:** Consolidates measures from other pages; uses primary & secondary parameters for flexible views.
-
-[Executive Page](https://github.com/GauravN471/Business_Insight_360/blob/main/ExecutiveView-ezgif.gif)
----
-
-## Data model & architecture
-
-**Model type:** Star schema with dimensions and 3 core facts.  
-**Dimensions:** `dim_date`, `dim_product`, `dim_customer`, `dim_market`.  
-**Facts:** `fact_sales_monthly`, `fact_forecast_monthly`, `fact_actual_estimates`.  
-**Supporting facts:** manufacturing & cost tables, invoice deductions, last sales helper tables.  
-**Other artifacts:** `Key Measures` (folder/table), `Set BM` (benchmark control), `P&L rows` utility table.  
-
-**Notes:**  
-- Relationships configured to keep filter flow logical and performance friendly.  
-- Date table is the single source of time intelligence.
+- **Uncovered that the top 5 customers by Net Sales contributed a disproportionate share of revenue with below-average Gross Margin %**, indicating that high-volume discount agreements were compressing profitability — framing a direct input for the next customer contract renegotiation cycle.
 
 ---
 
-# What I Learned — Skills & Outcomes
+## 📋 Business Recommendations
 
-### 📌 Business & Analytical Learning
-- P&L structure (Gross Sales → Net Profit)  
-- Forecasting concepts: Error %, Net Error, Forecast Accuracy  
-- Customer/Product segmentation  
-- Market performance & category-level insights  
+Based on the analysis across all 5 views, the following actions are recommended:
 
-### 📌 Power BI Modeling
-- Star Schema design  
-- Utility tables (P&L Rows, Set BM, Measure tables)  
-- Managing granular fact tables  
-- Optimizing relationships  
-
-### 📌 DAX (Advanced)
-- Dynamic benchmarks (LY / Target)  
-- Dynamic titles & labels  
-- Growth %, variances, YoY calculations  
-- Conditional formatting measures  
-- Parameter-driven DAX logic  
-
-### 📌 Power Query (M)
-- Merging fact & cost tables  
-- Cleaning raw Excel data  
-- Unpivoting P&L structures  
-- Removing absolute file paths  
-- Type handling & query grouping  
-
-### 📌 UX & UI Design
-- Custom JSON theme  
-- Bookmark-based navigation  
-- Slide-in support panel  
-- Tooltip pages  
-- Symmetric layout design  
-- Professional slicer panel  
-
-### 📌 Parameters & Interactivity
-- Field parameters for axis switching  
-- Metric switching (e.g., Customer/Product)  
-- dual-parameter logic for executive view  
+1. **Margin Recovery Review** — Launch a market-level cost audit for regions where Net Profit % is negative despite positive Gross Margin, focusing on freight, operational, and overhead costs.
+2. **Discount Policy Reform** — Restructure pre-invoice deduction agreements for the top 10 customers by volume, targeting a minimum GM% floor per customer segment.
+3. **Forecast Model Improvement** — Prioritize improving forecast accuracy for the top 20% of SKUs by revenue contribution — a 5-point improvement in Forecast Accuracy % would materially reduce both stockouts and write-offs.
+4. **Executive Reporting Cadence** — The Executive View should be used as a monthly leadership review artifact, replacing ad-hoc spreadsheet summaries sent via email.
 
 ---
 
+## 📸 Dashboard Preview
+
+| View | Preview |
+|---|---|
+| 🏠 Home | ![Home](Home-ezgif..gif) |
+| 💰 Finance | ![Finance](FinanceView-ezgif.gif) |
+| 📈 Sales | ![Sales](SalesView-ezgif.gif) |
+| 📣 Marketing | ![Marketing](Marketingview-.gif) |
+| 🚚 Supply Chain | ![Supply Chain](Supplychainview-ezgif..gif) |
+| 👔 Executive | ![Executive](ExecutiveView-ezgif.gif) |
+
+---
+
+## 🏗 Data Model Architecture
+```
+dim_date ──────────────┐
+dim_product ───────────┤──► fact_sales_monthly
+dim_customer ──────────┤──► fact_forecast_monthly  
+dim_market ────────────┘──► fact_actual_estimates
+                            + manufacturing_costs
+                            + invoice_deductions
+```
+
+**Model type:** Star Schema | **Granularity:** Monthly product-customer level
+
+---
+
+## ⚡ Key DAX Measures
+```dax
+-- Dynamic Benchmark (switches between LY and Target via parameter)
+Net Sales BM = IF([Set BM] = "Last Year", [Net Sales LY], [Net Sales Target])
+
+-- Gross Margin %
+GM % = DIVIDE([Gross Margin], [Net Sales], 0)
+
+-- YoY Net Sales Growth
+NS Growth % = DIVIDE([Net Sales] - [Net Sales LY], [Net Sales LY], 0)
+
+-- Forecast Accuracy
+Forecast Accuracy % = 1 - DIVIDE([Absolute Error], [Forecast Qty], 0)
+```
+
+---
+
+## 🗂 Repository Structure
+```
+Business_Insight_360/
+├── README.md
+├── *.gif               ← Dashboard page previews
+└── gifs/               ← Additional preview assets
+```
+> 📎 The `.pbix` source file is available on request — contact via LinkedIn or email.
+
+---
+
+## 👤 Author
+
+**Gaurav Nikam** — Data Analyst | Power BI · SQL · Excel · Bloomberg Terminal
+📧 gauravnikam471@gmail.com
+🔗 [LinkedIn](https://www.linkedin.com/in/-471-gaurav-nikam)
